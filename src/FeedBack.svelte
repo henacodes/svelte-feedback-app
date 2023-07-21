@@ -3,6 +3,10 @@
   import { createEventDispatcher } from "svelte";
 
   const dispatch = createEventDispatcher();
+
+  const handleRemove = () => {
+    dispatch("remove-feedback", feedback.id);
+  };
 </script>
 
 <div class="feedback">
@@ -11,9 +15,7 @@
   </p>
   <div class="rating">
     <p class="rating">rating: {feedback.rating}</p>
-    <p on:click={() => dispatch("remove-rating", feedback.id)} class="closeBtn">
-      X
-    </p>
+    <p class="closeBtn" on:click={handleRemove}>X</p>
   </div>
 </div>
 
@@ -47,7 +49,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-size: x-large;
+    font-size: large;
     font-weight: bolder;
     color: white;
     cursor: pointer;

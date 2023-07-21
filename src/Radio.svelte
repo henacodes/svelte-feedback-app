@@ -1,36 +1,52 @@
+<!-- Radio.svelte -->
 <script>
   import { createEventDispatcher } from "svelte";
-  export let value = 0;
-  export let id = "";
-  export let rating;
+
   const dispatch = createEventDispatcher();
+  export let id = "";
+  export let value = "";
+  let checked = false;
+
+  const handleRadios = (e) => {
+    checked = e.currentTarget.checked;
+    dispatch("set-rating", e.currentTarget.value);
+  };
 </script>
 
-<input
-  class="rating"
-  type="radio"
-  name="rating"
-  {id}
-  {value}
-  checked="true"
-  on:change={(e) => dispatch("set-rating", e.currentTarget.value)}
-/>
+<div class="radio-container">
+  <input type="radio" name="rating" {id} {value} on:change={handleRadios} />
+  <label for={id} class="radio-label">{value}</label>
+</div>
 
 <style>
+  .radio-container {
+    position: relative;
+    display: inline-block;
+    margin-right: 10px;
+  }
+
   input[type="radio"] {
     appearance: none;
-    background-color: #cacaca;
+    background-color: #f2f2f2;
     border-radius: 50%;
     border: 2px solid #ccc;
     box-sizing: border-box;
-    height: 20px;
-    width: 20px;
-    margin-right: 10px;
+    height: 50px;
+    width: 50px;
+    margin: 0;
     vertical-align: middle;
   }
 
   input[type="radio"]:checked {
     background-color: #ff5733;
     border-color: #ff5733;
+  }
+
+  .radio-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
   }
 </style>

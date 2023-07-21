@@ -1,33 +1,41 @@
 <script>
   import Form from "./Form.svelte";
   import FeedbackList from "./FeedbackList.svelte";
-  import { onMount } from "svelte";
+  import Notification from "./Notification.svelte";
   let data = [
     {
       id: 1,
-      text: ` Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam optio
-    neque quidem, magnam fugit pariatur exercitationem id rerum at nulla
-    excepturi consequuntur, vitae, temporibus ducimus! Voluptate accusantium
-    doloribus nam consequuntur.`,
+      text: ` Lorem ipsum dolor sit amo
+   `,
       rating: 6,
     },
   ];
 
-  onMount(() => {
-    addEventListener("updatedData", (e) => {
-      console.log("evevtn hapejds");
-      console.log(data);
-      data = [e.detail, ...data];
-      console.log(data);
-    });
-  });
+  let notificationData = {
+    text: null,
+    type: null,
+  };
+
+  const handleAdd = (event) => {
+    data = [event.detail, ...data];
+  };
 </script>
 
 <main class="container">
   <div class="app">
-    <Form />
-    <FeedbackList list={data} />
+    <Form
+      on:add-feedback={handleAdd}
+      on:remove-notifiction={() => (notificationData = { text: null })}
+      on:notify={(e) => (notificationData = e.detail)}
+    />
+    <FeedbackList
+      list={data}
+      on:remove-feedback={(e) => (data = data.filter((x) => x.id !== e.detail))}
+    />
   </div>
+  {#if notificationData.text}
+    <Notification {notificationData} />
+  {/if}
 </main>
 
 <style>

@@ -1,41 +1,47 @@
 <script>
   import Radio from "./Radio.svelte";
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(`rating ${rating} `, `comment ${feedbackText}`);
-    const event = new CustomEvent("updatedData", {
-      detail: { text: feedbackText, rating: rating, id: Math.random() },
-    });
-    dispatchEvent(event);
-    feedbackText = "";
-  };
-
+  import { createEventDispatcher } from "svelte";
+  let radioArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  let feedbackText = "";
+  let rating = null;
+  const dispatch = createEventDispatcher();
   const handleChange = (e) => {
     feedbackText = e.target.value;
   };
 
-  let rating = 0;
-  let feedbackText = "";
-  const radioArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
-  const handleRating = (e) => {
-    rating = e.detail;
+  const handleSubmit = () => {
+    if (rating) {
+      dispatch("add-feedback", {
+        text: feedbackText,
+        rating,
+        id: Math.random(),
+      });
+      feedbackText = "";
+    } else {
+      dispatch("notify", {
+        type: "error",
+        text: "You have to set your rating",
+      });
+      setTimeout(() => {
+        dispatch("remove-notifiction");
+      }, 2000);
+    }
   };
 </script>
 
-<form class="feedbackForm" on:submit={handleSubmit}>
+<form class="feedbackForm" on:submit|preventDefault={handleSubmit}>
   <div class="radios">
     {#each radioArray as rad}
       <Radio
+        on:set-rating={(e) => (rating = e.detail)}
         {rating}
         value={rad}
         id={`rad-${rad}`}
-        on:set-rating={handleRating}
       />
     {/each}
   </div>
   <div class="feedback-input">
-    <input type="text" on:change={handleChange} value={feedbackText} />
+    <input type="text" on:input={handleChange} value={feedbackText} />
     <button type="submit">done</button>
   </div>
 </form>
