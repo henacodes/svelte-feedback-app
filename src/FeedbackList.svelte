@@ -1,12 +1,14 @@
 <script>
   import FeedBack from "./FeedBack.svelte";
-
+  import { fade, scale } from "svelte/transition";
   export let list = [];
 </script>
 
 <div class="feedbackList">
   {#each list as feedback (feedback.id)}
-    <FeedBack {feedback} on:remove-feedback />
+    <div in:scale out:fade={{ duration: 500 }}>
+      <FeedBack {feedback} on:remove-feedback />
+    </div>
   {/each}
 </div>
 

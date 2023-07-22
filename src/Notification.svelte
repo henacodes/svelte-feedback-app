@@ -1,8 +1,10 @@
 <script>
+  import { scale } from "svelte/transition";
   export let notificationData = {};
 </script>
 
 <div
+  transition:scale
   class={`notification ` +
     (notificationData.type == "error" ? "error" : "info")}
 >
